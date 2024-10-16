@@ -1,5 +1,5 @@
 <script setup>
-import LongBG from "@/assets/background/long-background.svg";
+
 
 </script>
 
