@@ -15,7 +15,15 @@
   
   :root {
     --background-color: var(--red-color);
+    --border-btn: var(--yellow-color)
   }
   
   /* ------ Root ------ */
+
+  @font-face {
+    font-family: 'cinema';
+    src: url('~/assets/fonts/cinema.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
   

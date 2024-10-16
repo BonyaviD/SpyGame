@@ -12,10 +12,12 @@
 
 a {
   text-decoration: none;
+  color: white;
 }
 /* ------ Reset ------ */
 body {
   background-color: var(--background-color);
+  font-family: 'cinema', sans-serif;
 }
 /* container */
 

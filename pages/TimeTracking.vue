@@ -5,9 +5,9 @@ import Background from "@/components/layouts/Background.vue"
 
 <template>
   <div class="home-page">
-    <Background :srcBG="LongBG">
+   
       <div>TIME TRACKING</div>
-    </Background>
+
   </div>
 </template>
 

@@ -1,14 +1,41 @@
 <script setup>
-import ShortBG from "@/assets/background/short-background.svg";
-import Background from "@/components/layouts/Background.vue"
+import ShortBackground from "@/components/shared/ShortBackground.vue";
+import spyLogo from "@/assets/img/logo.svg";
+import spyText from "@/assets/img/spy-text.svg";
+import Button from "@/components/shared/Button.vue";
 </script>
 
 <template>
   <div class="home-page">
-    <Background :srcBG="ShortBG">
-      <div>test</div>
-    </Background>
+    <div class="home-header">
+      <img :src="spyLogo" alt="" />
+      <img :src="spyText" alt="" />
+    </div>
+    <ShortBackground>
+      <div class="home-btns">
+        <Button text="راهنمای بازی؟" to="/gameguid" :border="true" />
+        <Button text="!شروع بازی" to="/" />
+      </div>
+    </ShortBackground>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.home-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6rem 0;
+  gap: 5rem 0;
+}
+.home-btns {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem 0;
+  width: 100%;
+  height: 100%;
+  padding-top: 10rem;
+}
+</style>

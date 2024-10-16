@@ -1,6 +1,6 @@
 <script setup>
 import { useResolationCheck } from "@/stores/useResolationCheck"
-import DesktopView from "@/components/layouts/DesktopLayout.vue"
+import DesktopView from "@/components/desktop/DesktopLayout.vue"
 
 const resolationCheck = useResolationCheck()
 </script>
