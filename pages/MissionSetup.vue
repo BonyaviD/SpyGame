@@ -1,6 +1,14 @@
 <script setup>
+import LongBG from "@/assets/background/long-background.svg";
+import Background from "@/components/layouts/Background.vue"
 </script>
 
 <template>
-    <div>this is Mission setup</div>
+  <div class="home-page">
+    <Background :srcBG="LongBG">
+      <div>MISSION</div>
+    </Background>
+  </div>
 </template>
+
+<style scoped></style>

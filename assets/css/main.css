@@ -1,0 +1,21 @@
+/* ------ Root ------ */
+
+:root {
+    font-size: 62.5%;
+    --red-color: #891515;
+    --dark-color: #000000;
+    --yellow-color: #DEA71A;
+    --gray-color: #1E2133;
+    --brown-color: #361E1E;
+    --light-red-color: #AE2424;
+    --green-color: #26AE24;
+    --white-color: #D9D9D9;
+    --black-color: #222222;
+  }
+  
+  :root {
+    --background-color: var(--red-color);
+  }
+  
+  /* ------ Root ------ */
+  

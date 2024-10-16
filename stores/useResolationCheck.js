@@ -5,7 +5,7 @@ export const useResolationCheck = defineStore("resolation", () => {
   const isMobile = ref(true);
 
   function checkMobileMode() {
-    isMobile.value = window.matchMedia("(max-width: 576px)").matches;
+    isMobile.value = window.matchMedia("(max-width: 450px)").matches;
   }
 
   onMounted(() => {
