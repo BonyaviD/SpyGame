@@ -2,5 +2,5 @@
 </script>
 
 <template>
-    <div>this is game guid</div>
+        <div>this is game guid</div>
 </template>

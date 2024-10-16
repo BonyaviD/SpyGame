@@ -1,6 +1,7 @@
-<script setup>
-</script>
+<script setup></script>
 
 <template>
-    <div>this is home page</div>
+  <div>
+        this is home page
+  </div>
 </template>
