@@ -1,28 +1,16 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
-import DesktopView from "~/components/layouts/DesktopLayout.vue";
-const isMobile = ref(false);
+import { useResolationCheck } from "@/stores/useResolationCheck"
+import DesktopView from "@/components/layouts/DesktopLayout.vue"
 
-function checkMobileMode() {
-  isMobile.value = window.matchMedia("(max-width: 576px)").matches;
-}
-
-onMounted(() => {
-  checkMobileMode();
-  window.addEventListener("resize", checkMobileMode);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("resize", checkMobileMode);
-});
+const resolationCheck = useResolationCheck()
 </script>
 
 <template>
   <NuxtLayout>
-    <div :class="{ hidden: !isMobile }">
+    <DesktopView v-if="!resolationCheck.isMobile" />
+    <div :class="{ hidden: !resolationCheck.isMobile }">
       <NuxtPage />
     </div>
-    <DesktopView v-if="!isMobile" />
   </NuxtLayout>
 </template>
 
