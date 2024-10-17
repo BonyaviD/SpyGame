@@ -2,6 +2,7 @@
 import BackIcon from "@/components/shared/BackIcon.vue";
 import LongBackground from "@/components/shared/LongBackground.vue";
 import { useRules } from "@/stores/useRules.js";
+import Button from "@/components/shared/Button.vue";
 const rules = useRules();
 
 const changeRule = (index) => {
@@ -29,12 +30,16 @@ const changeRule = (index) => {
           <div class="description-title" v-if="rule.active">{{ rule.title }}</div>
           <div class="description" v-if="rule.active">{{ rule.description }}</div>
         </div>
+        <div class="guid-btn">
+        <Button text="متوجه شدم" to="/" />
+      </div>
       </div>
     </LongBackground>
   </div>
 </template>
 
 <style scoped>
+
 .guid-head {
   position: relative;
 }
@@ -51,7 +56,6 @@ const changeRule = (index) => {
 .guid-content {
   width: 100%;
   height: 100%;
-  margin-top: 12rem;
   color: var(--text-color);
 }
 
@@ -79,5 +83,11 @@ const changeRule = (index) => {
 .description {
   font-size: 2rem;
   margin-top: 1.5rem;
+}
+.guid-btn {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 2rem 0;
 }
 </style>
