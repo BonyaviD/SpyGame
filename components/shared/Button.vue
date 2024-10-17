@@ -37,6 +37,6 @@ border: 2px solid var(--border-btn);
 }
 
 .full-btn {
-  background-color: var(--border-btn);
+  background-color: var(--background-btn);
 }
 </style>

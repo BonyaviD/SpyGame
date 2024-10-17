@@ -29,6 +29,6 @@ import Logo from "../shared/Logo.vue";
 }
 
 .desktop img {
-  width: 350px;
+  width: 35rem;
 }
 </style>

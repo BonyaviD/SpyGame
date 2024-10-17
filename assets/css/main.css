@@ -15,7 +15,9 @@
   
   :root {
     --background-color: var(--red-color);
-    --border-btn: var(--yellow-color)
+    --border-btn: var(--yellow-color);
+    --background-btn: var(--yellow-color);
+    --text-color: var(--white-color);
   }
   
   /* ------ Root ------ */

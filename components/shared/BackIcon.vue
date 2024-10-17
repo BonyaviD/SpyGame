@@ -7,7 +7,7 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: "white",
+    default: "#DEA71A",
   },
   width: {
     type: [Number, String],
@@ -36,7 +36,7 @@ const computedHeight = computed(() => props.height);
     data-name="Layer 2"
     id="Layer_2"
     xmlns="http://www.w3.org/2000/svg"
-    stroke="#ffffff"
+    :stroke="`${props.color}`"
   >
     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
