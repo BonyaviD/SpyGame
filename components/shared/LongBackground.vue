@@ -10,19 +10,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="short-background" :style="{ backgroundImage: bgImage ? `url(${bgImage})` : '' }">
+  <div class="long-background" :style="{ backgroundImage: bgImage ? `url(${bgImage})` : '' }">
     <div class="slot">
-        <slot />
+      <slot />
     </div>
   </div>
 </template>
 
 <style scoped>
-.short-background {
+.long-background {
   position: fixed;
   bottom: 0;
   width: 100%;
   height: calc(100% - 10rem);
+  
 }
 .slot {
   margin-top: 12rem;
