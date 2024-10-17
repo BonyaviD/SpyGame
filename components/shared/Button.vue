@@ -25,6 +25,7 @@ const props = defineProps({
 
 <style scoped>
 .custom-btn {
+  text-align: center;
   width: clamp(20rem, 100%, 30rem);
   font-size: 2.5rem;
   padding: 1rem 0;
