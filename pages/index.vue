@@ -13,8 +13,8 @@ import Button from "@/components/shared/Button.vue";
     </div>
     <ShortBackground>
       <div class="home-btns">
-        <Button text="راهنمای بازی؟" to="/gameguid" :border="true" />
-        <Button text="!شروع بازی" to="/" />
+        <Button text="راهنمای بازی؟" to="/gameguid" border />
+        <Button text="!شروع بازی" to="/missionsetup" />
       </div>
     </ShortBackground>
   </div>
@@ -29,7 +29,6 @@ import Button from "@/components/shared/Button.vue";
   gap: 5rem 0;
 }
 .home-btns {
-  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
