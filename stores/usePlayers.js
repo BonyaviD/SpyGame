@@ -20,5 +20,9 @@ export const usePlayers = defineStore("players", () => {
     playersStatus.value[randomIndex].spyCheck = true;
 };
 
-  return { playersStatus, addPlayer, removePlayer, setRandomSpyCheck };
+const resetGame = () => {
+playersStatus.value = []
+}
+
+  return { playersStatus, addPlayer, removePlayer, setRandomSpyCheck, resetGame };
 });

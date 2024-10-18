@@ -201,7 +201,11 @@ export const useGameWords = defineStore("words", () => {
         const randomIndex = Math.floor(Math.random() * persianWords.length);
         wordGame.value = persianWords[randomIndex];
     }
+
+    const resetWord = ()=> {
+        wordGame.value = ''
+    }
     
-    return { persianWords, wordGame, getRandomWord }
+    return { persianWords, wordGame, getRandomWord, resetWord }
 })
 

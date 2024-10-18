@@ -76,7 +76,7 @@ onMounted(() => {
   align-items: start;
   gap: 0 0.5rem;
   padding: 2rem 0.5rem;
-  overflow: scroll;
+  overflow-x: scroll;
 
 }
 .add-player {
@@ -152,12 +152,12 @@ onMounted(() => {
   border: 1px solid var(--light-border-card);
   color: var(--text-color);
   font-family: cinema;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   direction: rtl;
 }
 .player-form input::placeholder {
   font-family: cinema;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
 }
 
 .input-btn {
