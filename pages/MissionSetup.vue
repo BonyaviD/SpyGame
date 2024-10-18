@@ -20,7 +20,7 @@ const players = usePlayers();
       </div>
     </LongBackground>
     <div class="mission-btn" :class="{ disable: !players.playersStatus.length }">
-      <Button text="مرحله بعد" to="cardselection" />
+      <Button text="مرحله بعد" to="/cardselection" />
     </div>
   </div>
 </template>
@@ -37,6 +37,6 @@ const players = usePlayers();
 }
 .mission-content {
   padding: 0 2rem;
-  position: relative;
+  height: 50vh;
 }
 </style>

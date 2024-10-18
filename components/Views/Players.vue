@@ -5,12 +5,12 @@ import AddPlus from "~/assets/img/add-plus.svg";
 import { usePlayers } from "~/stores/usePlayers";
 
 const players = usePlayers();
-const playerName = ref('')
-const playerForm = ref(false)
+const playerName = ref("");
+const playerForm = ref(false);
 const addPlayer = () => {
   players.addPlayer(playerName.value, false);
   playerForm.value = false;
-  playerName.value = '';
+  playerName.value = "";
 };
 
 const deletePlayer = (index) => {
@@ -41,12 +41,12 @@ onMounted(() => {
       </div>
     </div>
     <div class="add-player-name" v-if="playerForm" @click.self="playerForm = !playerForm">
-        <form @submit.prevent="addPlayer" class="player-form">
-          <div>
-            <input type="text" v-model="playerName" placeholder="نام بازیکن را وارد کنید" required />
-          </div>
-          <button class="input-btn" type="submit">ارسال</button>
-        </form>
+      <form @submit.prevent="addPlayer" class="player-form">
+        <div>
+          <input type="text" v-model="playerName" placeholder="نام بازیکن را وارد کنید" required />
+        </div>
+        <button class="input-btn" type="submit">ثبت</button>
+      </form>
     </div>
   </div>
 </template>
@@ -54,9 +54,10 @@ onMounted(() => {
 <style scoped>
 .players-section {
   border-top: 2px solid var(--border-card);
+  border-bottom: 2px solid var(--border-card);
   color: var(--text-color);
   position: relative;
-  z-index: 20;
+
 }
 .players-head {
   display: flex;
@@ -64,22 +65,24 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   font-size: 3rem;
+
 }
 .player-head-numbers {
-  color: var(--number-color);
+  color: var(--player-color);
 }
 .player-content {
   display: flex;
   flex-direction: row-reverse;
   align-items: start;
   gap: 0 0.5rem;
-  padding: 1rem;
+  padding: 2rem 0.5rem;
   overflow: scroll;
+
 }
 .add-player {
   position: relative;
   top: 1rem;
-  width: 10rem;
+  min-width: 10rem;
   height: 12.5rem;
   border: 2px dotted var(--light-border-card);
   display: flex;
@@ -114,7 +117,8 @@ onMounted(() => {
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  background-color: var(--background-card);
+  background-color: var(--light-border-card);
+  color: var(--background-card);
   border-radius: 100%;
   font-size: 1.5rem;
 }
@@ -139,7 +143,6 @@ onMounted(() => {
   padding: 2rem;
   background-color: var(--background-card);
   border-radius: 8px;
-  
 }
 .player-form input {
   background-color: inherit;
