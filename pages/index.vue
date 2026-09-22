@@ -1,8 +1,8 @@
-<script setup>
-import ShortBackground from "@/components/shared/ShortBackground.vue";
-import spyLogo from "@/assets/img/logo.svg";
-import spyText from "@/assets/img/spy-text.svg";
-import Button from "@/components/shared/Button.vue";
+<script setup lang="ts">
+import ShortBackground from "~/components/shared/ShortBackground.vue";
+import Button from "~/components/shared/Button.vue";
+import spyLogo from "~/assets/img/logo.svg";
+import spyText from "~/assets/img/spy-text.svg";
 </script>
 
 <template>
@@ -13,8 +13,8 @@ import Button from "@/components/shared/Button.vue";
     </div>
     <ShortBackground>
       <div class="home-btns">
-        <Button text="راهنمای بازی؟" to="/gameguid" border />
-        <Button text="!شروع بازی" to="/missionsetup" />
+        <Button text="راهنمای بازی؟" to="/guide" border />
+        <Button text="شروع بازی!" to="/setup" />
       </div>
     </ShortBackground>
   </div>

@@ -1,14 +1,15 @@
-<script setup>
-import QRcode from "@/assets/img/spy-qrcode.svg";
-import Logo from "../shared/Logo.vue";
+<script setup lang="ts">
+import qrCode from "~/assets/img/spy-qrcode.svg";
+import Logo from "~/components/shared/Logo.vue";
 </script>
+
 <template>
   <div>
     <Logo />
-  <div class="desktop">
-    <img :src="QRcode" alt="" />
-    <p>با موبایل وارد شوید</p>
-  </div>
+    <div class="desktop">
+      <img :src="qrCode" alt="" />
+      <p>با موبایل وارد شوید</p>
+    </div>
   </div>
 </template>
 

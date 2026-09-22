@@ -1,14 +1,15 @@
 import { defineStore } from "pinia";
+import type { Rule } from "~/types/game";
 
 export const useRules = defineStore("rules", () => {
-  const rulesInfo = ref([
+  const rules = ref<Rule[]>([
     {
-        name: "جاسوس",
-        title: "قوانین جاسوس",
-        description: `اگر جاسوس تا پایان زمان بازی شناسایی نشود، جاسوس برنده می‌شود.
+      name: "جاسوس",
+      title: "قوانین جاسوس",
+      description: `اگر جاسوس تا پایان زمان بازی شناسایی نشود، جاسوس برنده می‌شود.
   `,
-        active: false,
-      },
+      active: false,
+    },
     {
       name: "شهروند",
       title: "قوانین شهروندی",
@@ -18,15 +19,15 @@ export const useRules = defineStore("rules", () => {
     },
 
     {
-        name: "بازی",
-        title: "قوانین بازی",
-        description: `
+      name: "بازی",
+      title: "قوانین بازی",
+      description: `
                 هدف بازی جاسوس، پیدا کردن فردی است که در بین جمع، از موضوع یا مکان مخفی بازی بی‌اطلاع است. این فرد، “جاسوس” نامیده می‌شود و باید با
                 هوشیاری و دقت، هویت خود را پنهان کند. به هر بازی کن یه کارت داده می‌شود که در آن کارت یه کلمه نوشته شده است به جز یک کارت که نوشته شده است
                 جاسوس`,
-        active: true,
-      },
+      active: true,
+    },
   ]);
 
-  return { rulesInfo };
+  return { rules };
 });

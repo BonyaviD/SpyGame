@@ -1,21 +1,12 @@
-<script setup>
-import { useResolationCheck } from "@/stores/useResolationCheck"
-import DesktopView from "@/components/desktop/DesktopLayout.vue"
+<script setup lang="ts">
+import DesktopLayout from "~/components/desktop/DesktopLayout.vue";
 
-const resolationCheck = useResolationCheck()
+const { isMobile } = useDevice();
 </script>
 
 <template>
   <NuxtLayout>
-    <DesktopView v-if="!resolationCheck.isMobile" />
-    <div :class="{ hidden: !resolationCheck.isMobile }">
-      <NuxtPage />
-    </div>
+    <NuxtPage v-if="isMobile" />
+    <DesktopLayout v-else />
   </NuxtLayout>
 </template>
-
-<style scoped>
-.hidden {
-  display: none;
-}
-</style>

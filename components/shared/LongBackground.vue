@@ -1,16 +1,5 @@
-<script setup>
-import { onMounted, ref } from "vue";
-import LongBG from "@/assets/background/long-background.svg";
-
-const bgImage = ref(null);
-
-onMounted(() => {
-  bgImage.value = LongBG;
-});
-</script>
-
 <template>
-  <div class="long-background" :style="{ backgroundImage: bgImage ? `url(${bgImage})` : '' }">
+  <div class="long-background">
     <div class="slot">
       <slot />
     </div>
@@ -23,7 +12,7 @@ onMounted(() => {
   bottom: 0;
   width: 100%;
   height: calc(100% - 10rem);
-  
+  background-image: url("~/assets/background/long-background.svg");
 }
 .slot {
   margin-top: 12rem;

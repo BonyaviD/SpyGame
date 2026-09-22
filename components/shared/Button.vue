@@ -1,24 +1,15 @@
-<script setup>
-import { defineProps } from "vue";
-const props = defineProps({
-  text: {
-    type: String,
-  },
-  border: {
-    type: Boolean,
-    default: false,
-  },
-  to: {
-    type: String,
-    required: true,
-  },
-});
+<script setup lang="ts">
+defineProps<{
+  text: string;
+  to: string;
+  border?: boolean;
+}>();
 </script>
 
 <template>
-  <NuxtLink :to="props.to">
-    <div class="custom-btn" :class="props.border ? 'border-btn' : 'full-btn'">
-      {{ props.text }}
+  <NuxtLink :to="to">
+    <div class="custom-btn" :class="border ? 'border-btn' : 'full-btn'">
+      {{ text }}
     </div>
   </NuxtLink>
 </template>
@@ -34,7 +25,7 @@ const props = defineProps({
 }
 
 .border-btn {
-border: 2px solid var(--border-btn);
+  border: 2px solid var(--border-btn);
 }
 
 .full-btn {

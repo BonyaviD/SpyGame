@@ -1,49 +1,39 @@
-<script setup>
-import { onMounted, ref } from "vue";
-import CardBack from "~/assets/img/card-back.svg";
-import AddPlus from "~/assets/img/add-plus.svg";
-import { usePlayers } from "~/stores/usePlayers";
+<script setup lang="ts">
+import cardBack from "~/assets/img/card-back.svg";
+import addPlus from "~/assets/img/add-plus.svg";
+import { usePlayers } from "~/stores/players";
 
-const players = usePlayers();
+const playersStore = usePlayers();
 const playerName = ref("");
-const playerForm = ref(false);
+const isFormOpen = ref(false);
+
 const addPlayer = () => {
-  players.addPlayer(playerName.value, false);
-  playerForm.value = false;
+  playersStore.addPlayer(playerName.value);
+  isFormOpen.value = false;
   playerName.value = "";
 };
-
-const deletePlayer = (index) => {
-  players.removePlayer(index);
-};
-
-const addPlusSrc = ref(null);
-
-onMounted(() => {
-  addPlusSrc.value = AddPlus;
-});
 </script>
 
 <template>
   <div class="players-section">
     <div class="players-head">
       <div>بازیکنان</div>
-      <div class="player-head-numbers">{{ players.playersStatus.length }}</div>
+      <div class="player-head-numbers">{{ playersStore.players.length }}</div>
     </div>
     <div class="player-content">
-      <div class="player-card" v-for="(player, index) in players.playersStatus">
-        <img :src="CardBack" alt="" />
+      <div v-for="(player, index) in playersStore.players" :key="index" class="player-card">
+        <img :src="cardBack" alt="" />
         <div class="player-name">{{ player.name }}</div>
-        <div class="delete-player" @click="deletePlayer(index)">x</div>
+        <div class="delete-player" @click="playersStore.removePlayer(index)">x</div>
       </div>
-      <div class="add-player" @click="playerForm = !playerForm">
-        <img :src="`${addPlusSrc || ''}`" alt="" />
+      <div class="add-player" @click="isFormOpen = !isFormOpen">
+        <img :src="addPlus" alt="" />
       </div>
     </div>
-    <div class="add-player-name" v-if="playerForm" @click.self="playerForm = !playerForm">
-      <form @submit.prevent="addPlayer" class="player-form">
+    <div v-if="isFormOpen" class="add-player-name" @click.self="isFormOpen = false">
+      <form class="player-form" @submit.prevent="addPlayer">
         <div>
-          <input type="text" v-model="playerName" placeholder="نام بازیکن را وارد کنید" required />
+          <input v-model="playerName" type="text" placeholder="نام بازیکن را وارد کنید" required />
         </div>
         <button class="input-btn" type="submit">ثبت</button>
       </form>
@@ -57,27 +47,22 @@ onMounted(() => {
   border-bottom: 2px solid var(--border-card);
   color: var(--text-color);
   position: relative;
-
 }
 .players-head {
   display: flex;
-  flex-direction: row-reverse;
   justify-content: space-between;
   align-items: center;
   font-size: 3rem;
-
 }
 .player-head-numbers {
   color: var(--player-color);
 }
 .player-content {
   display: flex;
-  flex-direction: row-reverse;
   align-items: start;
   gap: 0 0.5rem;
   padding: 2rem 0.5rem;
   overflow-x: scroll;
-
 }
 .add-player {
   position: relative;
@@ -153,7 +138,6 @@ onMounted(() => {
   color: var(--text-color);
   font-family: cinema;
   font-size: 1.7rem;
-  direction: rtl;
 }
 .player-form input::placeholder {
   font-family: cinema;
