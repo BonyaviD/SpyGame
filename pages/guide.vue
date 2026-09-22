@@ -1,98 +1,44 @@
 <script setup lang="ts">
-import BackIcon from "~/components/shared/BackIcon.vue";
-import LongBackground from "~/components/shared/LongBackground.vue";
-import Button from "~/components/shared/Button.vue";
-import { useRules } from "~/stores/rules";
+import { rules, type RuleId } from "~/data/rules";
 
-const rulesStore = useRules();
+const activeRule = ref<RuleId>("game");
 
-const changeRule = (index: number) => {
-  rulesStore.rules.forEach((rule) => {
-    rule.active = false;
-  });
-  rulesStore.rules[index].active = true;
-};
+const tabs = rules.map(({ id, name }) => ({ id, label: name }));
+const currentRule = computed(() => rules.find((rule) => rule.id === activeRule.value)!);
 </script>
 
 <template>
-  <div class="guide-page">
-    <div class="guide-head">
-      <BackIcon to="/" />
-      <p class="guide-title">راهنمای بازی</p>
-    </div>
-    <LongBackground>
-      <div class="guide-content">
-        <div class="content-titles">
-          <div
-            v-for="(rule, index) in rulesStore.rules"
-            :key="rule.name"
-            class="content-title"
-            :class="{ active: rule.active }"
-            @click="changeRule(index)"
-          >
-            {{ rule.name }}
-          </div>
-        </div>
-        <div v-for="rule in rulesStore.rules" :key="rule.name" class="content-description">
-          <div v-if="rule.active" class="description-title">{{ rule.title }}</div>
-          <div v-if="rule.active" class="description">{{ rule.description }}</div>
-        </div>
-        <div class="guide-btn">
-          <Button text="متوجه شدم" to="/" />
-        </div>
-      </div>
-    </LongBackground>
-  </div>
+  <ScreenLayout back="/" title="راهنمای بازی">
+    <AppTabs v-model="activeRule" :tabs="tabs" label="بخش‌های راهنما">
+      <article class="rule">
+        <h2 class="rule__title">{{ currentRule.title }}</h2>
+        <p class="rule__description">{{ currentRule.description }}</p>
+      </article>
+    </AppTabs>
+
+    <template #footer>
+      <AppButton to="/" block>متوجه شدم</AppButton>
+      <AppCredit class="guide-credit" />
+    </template>
+  </ScreenLayout>
 </template>
 
 <style scoped>
-.guide-head {
-  position: relative;
-}
-.guide-title {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 4rem;
-  color: var(--text-color);
-  margin-top: 3rem;
-}
-
-.guide-content {
-  width: 100%;
-  height: 100%;
-  color: var(--text-color);
-}
-
-.content-titles {
+.rule {
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 1rem 0;
-  font-size: 2rem;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-inline: var(--space-2);
 }
-
-.active {
-  border-bottom: 2px solid var(--border-btn);
+.rule__title {
+  font-size: var(--font-size-2xl);
+  font-weight: normal;
 }
-.content-description {
-  padding: 0 3rem;
-  margin-top: 2rem;
+.rule__description {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-body);
 }
-
-.description-title {
-  font-size: 3rem;
-}
-
-.description {
-  font-size: 2rem;
-  margin-top: 1.5rem;
-}
-.guide-btn {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  padding: 2rem 0;
+.guide-credit {
+  margin-top: var(--space-4);
 }
 </style>

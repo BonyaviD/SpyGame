@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import BackIcon from "~/components/shared/BackIcon.vue";
-import Logo from "~/components/shared/Logo.vue";
-import LongBackground from "~/components/shared/LongBackground.vue";
-import Button from "~/components/shared/Button.vue";
-import cardBack from "~/assets/img/card-back.svg";
 import { usePlayers } from "~/stores/players";
 import { useWords } from "~/stores/words";
+
+const SPY_CARD_TEXT = "جاسوس";
 
 const playersStore = usePlayers();
 const wordsStore = useWords();
@@ -14,21 +11,23 @@ const playerIndex = ref(1);
 const chosenWord = ref("");
 const frontCard = ref(false);
 
+const currentPlayer = computed(() => playersStore.players[playerIndex.value - 1]);
+
 const turnOnCard = () => {
-  if (playersStore.players[playerIndex.value - 1].isSpy) {
-    chosenWord.value = "جاسوس";
-  } else {
-    chosenWord.value = wordsStore.currentWord;
-  }
-  frontCard.value = !frontCard.value;
+  chosenWord.value = currentPlayer.value.isSpy ? SPY_CARD_TEXT : wordsStore.currentWord;
+  frontCard.value = true;
 };
 
 const turnBackCard = () => {
   if (playerIndex.value < playersStore.players.length) {
+    // Clear right away so the word is not visible while the card flips back for the next player.
+    chosenWord.value = "";
     playerIndex.value++;
-    frontCard.value = !frontCard.value;
+    frontCard.value = false;
   }
 };
+
+const onCardClick = () => (frontCard.value ? turnBackCard() : turnOnCard());
 
 onMounted(() => {
   playerIndex.value = 1;
@@ -38,65 +37,68 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="card-selection-page">
-    <div class="card-selection-head">
-      <Logo />
-      <BackIcon to="/setup" />
+  <ScreenLayout back="/setup">
+    <div class="reveal">
+      <h2 class="reveal__turn">
+        نوبت،
+        <span class="reveal__player">{{ currentPlayer?.name }}</span>
+      </h2>
+
+      <FlipCard
+        class="reveal__card"
+        :flipped="frontCard"
+        :label="frontCard ? 'پنهان کردن کارت' : 'دیدن کارت'"
+        @click="onCardClick"
+      >
+        <template #front>
+          <CardBack />
+        </template>
+        <template #back>
+          <span class="reveal__word" :class="{ 'reveal__word--spy': chosenWord === SPY_CARD_TEXT }">
+            {{ chosenWord }}
+          </span>
+        </template>
+      </FlipCard>
     </div>
-    <LongBackground>
-      <div class="card-selection-content">
-        <div class="content-title">
-          نوبت،<span class="player-name">{{ playersStore.players[playerIndex - 1]?.name }}</span>
-        </div>
-        <div v-if="!frontCard" class="content-card" @click="turnOnCard">
-          <img :src="cardBack" alt="" />
-        </div>
-        <div v-else class="chosen-card" @click="turnBackCard">{{ chosenWord }}</div>
-      </div>
-    </LongBackground>
-    <div class="card-selection-btn">
-      <Button text="شروع" to="/result" />
-    </div>
-  </div>
+
+    <template #footer>
+      <AppButton to="/result" block>شروع</AppButton>
+    </template>
+  </ScreenLayout>
 </template>
 
 <style scoped>
-.card-selection-content {
+.reveal {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 2rem 0;
+  gap: var(--space-6);
 }
-.content-title {
-  font-size: 2.5rem;
-  color: var(--text-color);
+.reveal__turn {
+  font-size: var(--font-size-2xl);
+  font-weight: normal;
 }
-.player-name {
-  color: var(--player-color);
+.reveal__player {
+  color: var(--color-accent);
 }
-
-.content-card img {
-  width: 20rem;
+.reveal__card {
+  width: min(13rem, 60%);
 }
-
-.chosen-card {
-  position: relative;
-  top: 1.4rem;
-  width: 18rem;
-  height: 25.5rem;
-  border-radius: 8px;
-  background-color: var(--background-card);
-  color: var(--text-color);
+.reveal__word {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
-}
-.card-selection-btn {
-  position: fixed;
-  bottom: 0;
   width: 100%;
-  padding: 2rem 0;
+  height: 100%;
+  padding: var(--space-4);
+  border: 2px solid var(--color-surface-raised);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  font-size: var(--font-size-3xl);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.reveal__word--spy {
+  color: var(--color-accent);
 }
 </style>

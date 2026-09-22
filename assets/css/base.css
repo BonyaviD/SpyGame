@@ -1,24 +1,84 @@
+@font-face {
+  font-family: "cinema";
+  src: url("~/assets/fonts/cinema.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ------ Reset ------ */
 *,
 *::before,
 *::after {
   margin: 0;
   padding: 0;
-  text-decoration: none;
   box-sizing: border-box;
+}
+
+ul,
+ol {
   list-style: none;
-  outline: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 a {
+  color: inherit;
   text-decoration: none;
-  color: white;
 }
-/* ------ Reset ------ */
-body {
-  background-color: var(--background-color);
-  font-family: "cinema", sans-serif;
-}
-/* container */
 
-/* container */
+/* ------ Global ------ */
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-height: 100dvh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-tight);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Directional artwork (e.g. back arrows) drawn for LTR. */
+[dir="rtl"] .mirror-rtl {
+  transform: scaleX(-1);
+}
+
+/* Thin, theme-colored scrollbars (visible mainly on desktop). */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-surface-raised) transparent;
+}

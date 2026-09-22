@@ -29,15 +29,25 @@ npm run dev
 
 ```
 pages/            صفحات و مسیرها: index → setup → reveal → result، و guide
+  dev/ui.vue      نمایش همه‌ی کامپوننت‌ها و توکن‌ها (فقط در حالت dev: /dev/ui)
 components/
-  shared/         کامپوننت‌های عمومی (دکمه، لوگو، پس‌زمینه‌ها، دکمه‌ی برگشت)
-  game/           کامپوننت‌های مخصوص بازی
-  desktop/        صفحه‌ی مخصوص دسکتاپ (QR code)
-composables/      منطق قابل‌استفاده‌ی مجدد (مثل useDevice)
-stores/           استورهای Pinia (بازیکنان، کلمات، قوانین)
+  ui/             کامپوننت‌های پایه‌ی سیستم دیزاین (AppButton، AppInput، AppModal، AppTabs، ...)
+  layout/         چیدمان صفحه (ScreenLayout، SceneBackground، AppLogo، DesktopAside)
+  game/           کامپوننت‌های مخصوص بازی (PlayerList، PlayerCard، CardBack)
+layouts/          قاب اصلی برنامه (قاب گوشی روی دسکتاپ)
+stores/           استورهای Pinia (بازیکنان، کلمات)
+data/             داده‌های ثابت (قوانین بازی)
 types/            تایپ‌های مشترک
 tests/            تست‌های Vitest
-assets/           فونت، تصاویر و CSS
+assets/css/       tokens.css (توکن‌های طراحی) و base.css (ریست و استایل‌های سراسری)
 ```
+
+## سیستم دیزاین
+
+- **توکن‌ها** در `assets/css/tokens.css`: رنگ‌های خام (`--red-700`, ...) فقط در همان فایل استفاده می‌شوند؛ کامپوننت‌ها فقط از توکن‌های معنایی (`--color-primary`, `--space-4`, `--font-size-lg`, `--radius-md`, ...) استفاده می‌کنند.
+- **کامپوننت‌ها** بر اساس نام فایل به‌صورت خودکار import می‌شوند (`<AppButton>`، `<PlayerCard>`).
+- هر صفحه با `ScreenLayout` ساخته می‌شود (هدر + بدنه‌ی اسکرول‌شونده + فوتر ثابت دکمه‌ها).
+- مودال‌ها با `Teleport` به `#overlay-root` داخل قاب برنامه منتقل می‌شوند.
+- جهت‌ها منطقی هستند (`inset-inline-start`، `padding-inline`) تا RTL درست کار کند.
 
 نقشه‌ی راه و کارهای باقی‌مانده در [TASKS.md](TASKS.md) است.
