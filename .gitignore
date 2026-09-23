@@ -25,3 +25,7 @@ logs
 
 # Claude Code local config
 .claude
+
+# Playwright
+test-results
+playwright-report

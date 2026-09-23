@@ -47,6 +47,16 @@ tests/            تست‌های Vitest
 assets/css/       tokens.css (توکن‌های طراحی) و base.css (ریست و استایل‌های سراسری)
 ```
 
+## PWA و اجرای آفلاین
+
+بازی قابل نصب روی گوشی است (Add to Home Screen) و بعد از اولین بازدید بدون اینترنت هم کار می‌کند. آیکون اصلی `public/icon.svg` است؛ بعد از تغییرش `npm run generate-icons` را اجرا کنید.
+
+## تست‌ها و CI
+
+- تست‌های واحد در `tests/stores` و `tests/components` (Vitest با محیط Nuxt).
+- تست‌های E2E در `tests/e2e` روی بیلد production، در سه حالت: موبایل، دسکتاپ و موبایل با انیمیشن‌های واقعی. اولین بار: `npx playwright install chromium`.
+- GitHub Actions (`.github/workflows/ci.yml`) روی هر push و pull request همه‌ی این‌ها را اجرا می‌کند.
+
 ## سیستم دیزاین
 
 - **توکن‌ها** در `assets/css/tokens.css`: رنگ‌های خام (`--red-700`, ...) فقط در همان فایل استفاده می‌شوند؛ کامپوننت‌ها فقط از توکن‌های معنایی (`--color-primary`, `--space-4`, `--font-size-lg`, `--radius-md`, ...) استفاده می‌کنند.

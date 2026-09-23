@@ -13,7 +13,15 @@ withDefaults(
   { message: undefined, confirmText: "تأیید", cancelText: "انصراف", danger: false },
 );
 
-const emit = defineEmits<{ confirm: []; cancel: [] }>();
+const emit = defineEmits<{
+  confirm: [];
+  cancel: [];
+  /**
+   * The dialog has finished closing. Navigate here rather than on `confirm`: starting a page
+   * transition while the dialog is still animating out can leave the old page on screen.
+   */
+  closed: [];
+}>();
 
 // Emit before closing: parents often clear the dialog's context when it closes.
 const confirm = () => {
@@ -28,7 +36,7 @@ const cancel = () => {
 </script>
 
 <template>
-  <AppModal v-model:open="open" :title="title" @close="emit('cancel')">
+  <AppModal v-model:open="open" :title="title" @close="emit('cancel')" @closed="emit('closed')">
     <p v-if="message" class="confirm__message">{{ message }}</p>
     <template #actions>
       <AppButton variant="outline" size="md" @click="cancel">{{ cancelText }}</AppButton>

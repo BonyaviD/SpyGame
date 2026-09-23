@@ -56,17 +56,32 @@ const isLeaveConfirmOpen = computed({
   },
 });
 
+// Confirmed: remember where to go, and navigate once the dialog has finished closing.
+let confirmedRoute: string | null = null;
+let isLeaving = false;
+
 onBeforeRouteLeave((to) => {
-  if (game.phase !== "reveal" || ROUTES_KEEPING_ROUND.includes(to.path)) return true;
+  if (isLeaving || game.phase !== "reveal" || ROUTES_KEEPING_ROUND.includes(to.path)) {
+    return true;
+  }
   pendingRoute.value = to.fullPath;
   return false;
 });
 
-const leaveGame = async () => {
-  const target = pendingRoute.value ?? "/setup";
-  game.abortRound();
-  await router.push(target);
+const confirmLeave = () => {
+  confirmedRoute = pendingRoute.value ?? "/setup";
 };
+
+const leaveIfConfirmed = async () => {
+  if (!confirmedRoute) return;
+  isLeaving = true;
+  await router.push(confirmedRoute);
+};
+
+// Cleared once this page is gone, so it never renders an empty round while fading out.
+onUnmounted(() => {
+  if (isLeaving) game.abortRound();
+});
 </script>
 
 <template>
@@ -137,7 +152,8 @@ const leaveGame = async () => {
       confirm-text="لغو بازی"
       cancel-text="ادامه"
       danger
-      @confirm="leaveGame"
+      @confirm="confirmLeave"
+      @closed="leaveIfConfirmed"
     />
   </ScreenLayout>
 </template>

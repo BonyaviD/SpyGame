@@ -10,7 +10,12 @@ withDefaults(
   { dismissible: true },
 );
 
-const emit = defineEmits<{ close: [] }>();
+const emit = defineEmits<{
+  /** Dismissed by the user (Escape or backdrop). */
+  close: [];
+  /** The closing animation has finished and the dialog is gone from the page. */
+  closed: [];
+}>();
 
 const titleId = useId();
 const dialog = ref<HTMLElement>();
@@ -67,7 +72,7 @@ watch(
 <template>
   <!-- defer: the target is rendered by the layout in the same mount cycle. -->
   <Teleport defer to="#overlay-root">
-    <Transition name="modal">
+    <Transition name="modal" @after-leave="emit('closed')">
       <div
         v-if="open"
         class="modal"

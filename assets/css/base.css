@@ -1,6 +1,6 @@
 @font-face {
   font-family: "cinema";
-  src: url("~/assets/fonts/cinema.ttf") format("truetype");
+  src: url("~/assets/fonts/cinema.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -81,4 +81,19 @@ body {
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-surface-raised) transparent;
+}
+
+/* ------ Page transitions (see app.pageTransition in nuxt.config.ts) ------ */
+.page-enter-active,
+.page-leave-active {
+  transition:
+    opacity var(--duration-normal) var(--ease-standard),
+    transform var(--duration-normal) var(--ease-standard);
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.page-leave-to {
+  opacity: 0;
 }
