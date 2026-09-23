@@ -35,8 +35,10 @@ components/
   layout/         چیدمان صفحه (ScreenLayout، SceneBackground، AppLogo، DesktopAside)
   game/           کامپوننت‌های مخصوص بازی (PlayerList، PlayerCard، CardBack)
 layouts/          قاب اصلی برنامه (قاب گوشی روی دسکتاپ)
-stores/           استورهای Pinia (بازیکنان، کلمات)
-data/             داده‌های ثابت (قوانین بازی)
+stores/           استورهای Pinia: players (بازیکنان)، words (انتخاب کلمه)، game (دور جاری و مراحل آن)
+middleware/       گارد مسیر: صفحات /reveal و /result فقط در مرحله‌ی درست بازی باز می‌شوند
+data/             داده‌های ثابت: config (محدودیت‌ها)، words (کلمات دسته‌بندی‌شده)، rules (قوانین)
+utils/            persistedRef (ذخیره در localStorage)، توابع تصادفی و فرمت اعداد فارسی
 types/            تایپ‌های مشترک
 tests/            تست‌های Vitest
 assets/css/       tokens.css (توکن‌های طراحی) و base.css (ریست و استایل‌های سراسری)

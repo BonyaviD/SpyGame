@@ -15,14 +15,15 @@ withDefaults(
 
 const emit = defineEmits<{ confirm: []; cancel: [] }>();
 
+// Emit before closing: parents often clear the dialog's context when it closes.
 const confirm = () => {
-  open.value = false;
   emit("confirm");
+  open.value = false;
 };
 
 const cancel = () => {
-  open.value = false;
   emit("cancel");
+  open.value = false;
 };
 </script>
 

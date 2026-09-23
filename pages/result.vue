@@ -1,39 +1,56 @@
 <script setup lang="ts">
-import { usePlayers } from "~/stores/players";
-import { useWords } from "~/stores/words";
+import { useGame } from "~/stores/game";
 
-const playersStore = usePlayers();
-const wordsStore = useWords();
+const game = useGame();
 
-const isSpyRevealed = ref(false);
+const newRound = async () => {
+  game.startRound();
+  await navigateTo("/reveal");
+};
 
-const endGame = async () => {
-  playersStore.reset();
-  wordsStore.reset();
-  await navigateTo("/");
+const editPlayers = async () => {
+  game.abortRound();
+  await navigateTo("/setup");
 };
 </script>
 
 <template>
-  <ScreenLayout>
-    <div class="result">
-      <h2 class="result__title">بازی شروع شد</h2>
+  <ScreenLayout back="/" help>
+    <div v-if="game.round" class="result">
+      <h2 class="result__title">
+        {{ game.round.isSpyRevealed ? "جاسوس لو رفت!" : "بازی شروع شد" }}
+      </h2>
+      <p v-if="game.round.isSpyRevealed" class="result__word">
+        کلمه: <strong>{{ game.round.word }}</strong>
+      </p>
 
       <ul class="result__players">
-        <li v-for="(player, index) in playersStore.players" :key="index">
+        <li v-for="player in game.round.players" :key="player.id">
           <PlayerCard
             :name="player.name"
-            :role="isSpyRevealed ? (player.isSpy ? 'جاسوس' : 'شهروند') : undefined"
-            :highlighted="player.isSpy"
+            :role="
+              game.round.isSpyRevealed ? (game.isSpy(player.id) ? 'جاسوس' : 'شهروند') : undefined
+            "
+            :highlighted="game.round.isSpyRevealed && game.isSpy(player.id)"
           />
         </li>
       </ul>
 
-      <AppButton variant="outline" size="md" @click="isSpyRevealed = true">جاسوس کیه؟</AppButton>
+      <AppButton
+        v-if="!game.round.isSpyRevealed"
+        variant="outline"
+        size="md"
+        @click="game.revealSpy()"
+      >
+        جاسوس کیه؟
+      </AppButton>
     </div>
 
     <template #footer>
-      <AppButton block @click="endGame">پایان بازی!</AppButton>
+      <div class="result__actions">
+        <AppButton block @click="newRound">دور جدید</AppButton>
+        <AppButton variant="outline" block @click="editPlayers">تغییر بازیکنان</AppButton>
+      </div>
     </template>
   </ScreenLayout>
 </template>
@@ -43,10 +60,17 @@ const endGame = async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-6);
+  gap: var(--space-5);
 }
 .result__title {
   font-size: var(--font-size-2xl);
+  font-weight: normal;
+  color: var(--color-accent);
+}
+.result__word {
+  font-size: var(--font-size-lg);
+}
+.result__word strong {
   font-weight: normal;
   color: var(--color-accent);
 }
@@ -56,5 +80,10 @@ const endGame = async () => {
   width: 100%;
   padding-block: var(--space-2);
   overflow-x: auto;
+}
+.result__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 </style>

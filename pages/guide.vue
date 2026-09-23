@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { rules, type RuleId } from "~/data/rules";
 
+const router = useRouter();
 const activeRule = ref<RuleId>("game");
+
+// Return to wherever the guide was opened from (home or a game screen).
+const backTo = computed(() => (router.options.history.state.back as string | null) ?? "/");
 
 const tabs = rules.map(({ id, name }) => ({ id, label: name }));
 const currentRule = computed(() => rules.find((rule) => rule.id === activeRule.value)!);
 </script>
 
 <template>
-  <ScreenLayout back="/" title="راهنمای بازی">
+  <ScreenLayout :back="backTo" title="راهنمای بازی">
     <AppTabs v-model="activeRule" :tabs="tabs" label="بخش‌های راهنما">
       <article class="rule">
         <h2 class="rule__title">{{ currentRule.title }}</h2>
@@ -17,7 +21,7 @@ const currentRule = computed(() => rules.find((rule) => rule.id === activeRule.v
     </AppTabs>
 
     <template #footer>
-      <AppButton to="/" block>متوجه شدم</AppButton>
+      <AppButton :to="backTo" block>متوجه شدم</AppButton>
       <AppCredit class="guide-credit" />
     </template>
   </ScreenLayout>

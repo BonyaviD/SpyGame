@@ -5,6 +5,8 @@ withDefaults(
   defineProps<{
     /** Target of the header back button; hidden when omitted. */
     back?: RouteLocationRaw;
+    /** Shows a guide button in the header. */
+    help?: boolean;
     /** Page title shown in the header instead of the logo. */
     title?: string;
     /**
@@ -13,7 +15,7 @@ withDefaults(
      */
     variant?: "full" | "compact";
   }>(),
-  { back: undefined, title: undefined, variant: "full" },
+  { back: undefined, help: false, title: undefined, variant: "full" },
 );
 
 defineEmits<{ back: [event: MouseEvent] }>();
@@ -29,6 +31,14 @@ defineEmits<{ back: [event: MouseEvent] }>();
         label="بازگشت"
         :to="back"
         @click="$emit('back', $event)"
+      />
+      <AppIconButton
+        v-if="help"
+        class="screen__help"
+        icon="help"
+        label="راهنمای بازی"
+        to="/guide"
+        size="2rem"
       />
       <slot name="header">
         <h1 v-if="title" class="screen__title">{{ title }}</h1>
@@ -69,6 +79,11 @@ defineEmits<{ back: [event: MouseEvent] }>();
   position: absolute;
   top: max(var(--space-3), env(safe-area-inset-top));
   inset-inline-start: var(--space-3);
+}
+.screen__help {
+  position: absolute;
+  top: max(var(--space-3), env(safe-area-inset-top));
+  inset-inline-end: var(--space-3);
 }
 .screen__title {
   font-size: var(--font-size-3xl);

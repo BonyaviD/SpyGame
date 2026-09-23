@@ -1,16 +1,44 @@
 <script setup lang="ts">
+import { MAX_NAME_LENGTH, MAX_PLAYERS } from "~/data/config";
 import { usePlayers } from "~/stores/players";
+import type { Player } from "~/types/game";
+import { toFaDigits } from "~/utils/format";
 
 const playersStore = usePlayers();
-const playerName = ref("");
-const isFormOpen = ref(false);
 
-const addPlayer = () => {
-  const name = playerName.value.trim();
-  if (!name) return;
-  playersStore.addPlayer(name);
-  isFormOpen.value = false;
+const isFormOpen = ref(false);
+const playerName = ref("");
+const nameError = ref<string>();
+const nameInput = ref<{ focus: () => void }>();
+const playerToRemove = ref<Player | null>(null);
+
+const openForm = () => {
   playerName.value = "";
+  nameError.value = undefined;
+  isFormOpen.value = true;
+};
+
+// The dialog stays open so several players can be added in a row.
+const addPlayer = () => {
+  nameError.value = playersStore.addPlayer(playerName.value) ?? undefined;
+  if (!nameError.value) playerName.value = "";
+  if (playersStore.isFull) isFormOpen.value = false;
+  else nameInput.value?.focus();
+};
+
+watch(playerName, () => {
+  nameError.value = undefined;
+});
+
+const isConfirmOpen = computed({
+  get: () => playerToRemove.value !== null,
+  set: (open) => {
+    if (!open) playerToRemove.value = null;
+  },
+});
+
+const removePlayer = () => {
+  if (playerToRemove.value) playersStore.removePlayer(playerToRemove.value.id);
 };
 </script>
 
@@ -18,40 +46,48 @@ const addPlayer = () => {
   <section class="players" aria-labelledby="players-title">
     <header class="players__head">
       <h2 id="players-title" class="players__title">بازیکنان</h2>
-      <span class="players__count" aria-label="تعداد بازیکنان">
-        {{ playersStore.players.length }}
+      <span class="players__count">
+        {{ toFaDigits(playersStore.players.length) }}
+        <span class="players__max">/ {{ toFaDigits(MAX_PLAYERS) }}</span>
       </span>
     </header>
 
     <ul class="players__list">
-      <li v-for="(player, index) in playersStore.players" :key="index">
-        <PlayerCard :name="player.name" removable @remove="playersStore.removePlayer(index)" />
+      <li v-for="player in playersStore.players" :key="player.id">
+        <PlayerCard :name="player.name" removable @remove="playerToRemove = player" />
       </li>
-      <li>
-        <button
-          type="button"
-          class="players__add"
-          aria-label="افزودن بازیکن"
-          @click="isFormOpen = true"
-        >
+      <li v-if="!playersStore.isFull">
+        <button type="button" class="players__add" aria-label="افزودن بازیکن" @click="openForm">
           <AppIcon name="plus" size="2rem" />
         </button>
       </li>
     </ul>
 
     <AppModal v-model:open="isFormOpen" title="بازیکن جدید">
-      <form id="add-player-form" @submit.prevent="addPlayer">
+      <form id="add-player-form" novalidate @submit.prevent="addPlayer">
         <AppInput
+          ref="nameInput"
           v-model="playerName"
           label="نام بازیکن"
           hide-label
           placeholder="نام بازیکن را وارد کنید"
+          :maxlength="MAX_NAME_LENGTH"
+          :error="nameError"
         />
       </form>
       <template #actions>
+        <AppButton variant="outline" size="md" @click="isFormOpen = false">تمام</AppButton>
         <AppButton type="submit" form="add-player-form" size="md">ثبت</AppButton>
       </template>
     </AppModal>
+
+    <AppConfirm
+      v-model:open="isConfirmOpen"
+      :title="`${playerToRemove?.name ?? ''} حذف شود؟`"
+      confirm-text="حذف"
+      danger
+      @confirm="removePlayer"
+    />
   </section>
 </template>
 
@@ -72,6 +108,10 @@ const addPlayer = () => {
 .players__count {
   font-size: var(--font-size-2xl);
   color: var(--color-accent);
+}
+.players__max {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }
 .players__list {
   display: flex;

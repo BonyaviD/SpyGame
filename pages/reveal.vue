@@ -1,69 +1,124 @@
 <script setup lang="ts">
-import { usePlayers } from "~/stores/players";
-import { useWords } from "~/stores/words";
+import { SPY_CARD_TEXT } from "~/data/config";
+import { useGame } from "~/stores/game";
+import { toFaDigits } from "~/utils/format";
 
-const SPY_CARD_TEXT = "جاسوس";
+const game = useGame();
+const router = useRouter();
 
-const playersStore = usePlayers();
-const wordsStore = useWords();
+const isCardOpen = ref(false);
+/**
+ * Text on the open card. Kept separately from the current player so that when the card is
+ * closed and the turn moves on, the next player never sees the previous card while it flips.
+ */
+const cardText = ref("");
 
-const playerIndex = ref(1);
-const chosenWord = ref("");
-const frontCard = ref(false);
+const totalPlayers = computed(() => game.round?.players.length ?? 0);
+const turnNumber = computed(() => (game.round?.revealedCount ?? 0) + 1);
 
-const currentPlayer = computed(() => playersStore.players[playerIndex.value - 1]);
+const onCardClick = () => {
+  const player = game.currentPlayer;
+  if (!player || !game.round) return;
 
-const turnOnCard = () => {
-  chosenWord.value = currentPlayer.value.isSpy ? SPY_CARD_TEXT : wordsStore.currentWord;
-  frontCard.value = true;
-};
-
-const turnBackCard = () => {
-  if (playerIndex.value < playersStore.players.length) {
-    // Clear right away so the word is not visible while the card flips back for the next player.
-    chosenWord.value = "";
-    playerIndex.value++;
-    frontCard.value = false;
+  if (isCardOpen.value) {
+    cardText.value = "";
+    isCardOpen.value = false;
+    game.markCurrentRevealed();
+  } else {
+    cardText.value = game.isSpy(player.id) ? SPY_CARD_TEXT : game.round.word;
+    isCardOpen.value = true;
   }
 };
 
-const onCardClick = () => (frontCard.value ? turnBackCard() : turnOnCard());
+const startDiscussion = async () => {
+  game.finishReveal();
+  await navigateTo("/result");
+};
 
-onMounted(() => {
-  playerIndex.value = 1;
-  wordsStore.pickRandomWord();
-  playersStore.assignRandomSpy();
+// Leaving while cards are being dealt cancels the round, so ask first.
+// Moving on to the result or peeking at the guide keeps the round.
+const ROUTES_KEEPING_ROUND = ["/result", "/guide"];
+const pendingRoute = ref<string | null>(null);
+const isLeaveConfirmOpen = computed({
+  get: () => pendingRoute.value !== null,
+  set: (open) => {
+    if (!open) pendingRoute.value = null;
+  },
 });
+
+onBeforeRouteLeave((to) => {
+  if (game.phase !== "reveal" || ROUTES_KEEPING_ROUND.includes(to.path)) return true;
+  pendingRoute.value = to.fullPath;
+  return false;
+});
+
+const leaveGame = async () => {
+  const target = pendingRoute.value ?? "/setup";
+  game.abortRound();
+  await router.push(target);
+};
 </script>
 
 <template>
-  <ScreenLayout back="/setup">
-    <div class="reveal">
-      <h2 class="reveal__turn">
-        نوبت،
-        <span class="reveal__player">{{ currentPlayer?.name }}</span>
-      </h2>
+  <ScreenLayout back="/setup" help>
+    <div v-if="game.currentPlayer" class="reveal">
+      <div class="reveal__heading">
+        <h2 class="reveal__turn">
+          نوبت،
+          <span class="reveal__player">{{ game.currentPlayer.name }}</span>
+        </h2>
+        <p class="reveal__progress">
+          {{ toFaDigits(turnNumber) }} از {{ toFaDigits(totalPlayers) }}
+        </p>
+      </div>
 
       <FlipCard
         class="reveal__card"
-        :flipped="frontCard"
-        :label="frontCard ? 'پنهان کردن کارت' : 'دیدن کارت'"
+        :flipped="isCardOpen"
+        :label="isCardOpen ? 'بستن کارت و نوبت نفر بعد' : 'دیدن کارت'"
         @click="onCardClick"
       >
         <template #front>
           <CardBack />
         </template>
         <template #back>
-          <span class="reveal__word" :class="{ 'reveal__word--spy': chosenWord === SPY_CARD_TEXT }">
-            {{ chosenWord }}
+          <span
+            class="reveal__word"
+            :class="{ 'reveal__word--spy': cardText === SPY_CARD_TEXT }"
+            aria-live="polite"
+          >
+            {{ cardText }}
           </span>
         </template>
       </FlipCard>
+
+      <p class="reveal__hint">
+        {{
+          isCardOpen
+            ? "کلمه را به خاطر بسپار و دوباره روی کارت بزن تا بسته شود."
+            : "فقط خودت کارت را ببین؛ روی کارت بزن."
+        }}
+      </p>
+    </div>
+
+    <div v-else class="reveal reveal--done">
+      <h2 class="reveal__turn">همه کارت‌شان را دیدند</h2>
+      <p class="reveal__hint">گوشی را وسط بگذارید و بازی را شروع کنید.</p>
     </div>
 
     <template #footer>
-      <AppButton to="/result" block>شروع</AppButton>
+      <AppButton :disabled="!game.allRevealed" block @click="startDiscussion">شروع بازی</AppButton>
     </template>
+
+    <AppConfirm
+      v-model:open="isLeaveConfirmOpen"
+      title="بازی لغو شود؟"
+      message="کارت‌های این دور از بین می‌روند و باید دوباره پخش شوند."
+      confirm-text="لغو بازی"
+      cancel-text="ادامه"
+      danger
+      @confirm="leaveGame"
+    />
   </ScreenLayout>
 </template>
 
@@ -72,7 +127,18 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-6);
+  gap: var(--space-5);
+}
+.reveal--done {
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+.reveal__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
 }
 .reveal__turn {
   font-size: var(--font-size-2xl);
@@ -80,6 +146,12 @@ onMounted(() => {
 }
 .reveal__player {
   color: var(--color-accent);
+}
+.reveal__progress,
+.reveal__hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-align: center;
 }
 .reveal__card {
   width: min(13rem, 60%);

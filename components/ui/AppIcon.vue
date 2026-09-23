@@ -1,5 +1,5 @@
 <script setup lang="ts">
-export type IconName = "back" | "plus" | "close";
+export type IconName = "back" | "plus" | "close" | "help";
 
 const props = withDefaults(
   defineProps<{
@@ -40,6 +40,17 @@ const mirroredInRtl = computed(() => props.name === "back");
       stroke-width="2"
       stroke-linecap="round"
     />
+    <g
+      v-else-if="name === 'help'"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+    >
+      <circle cx="12" cy="12" r="9.5" />
+      <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6" />
+      <path d="M12 17.2h.01" stroke-width="2.5" />
+    </g>
     <path
       v-else-if="name === 'close'"
       d="M7 7L17 17M17 7L7 17"

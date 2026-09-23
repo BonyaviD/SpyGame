@@ -8,6 +8,7 @@
   /* ---- Primitive: color ---- */
   --red-700: #891515;
   --red-500: #ae2424;
+  --red-300: #ff8a80;
   --yellow-500: #dea71a;
   --yellow-400: #ffb800;
   --navy-800: #1e2133;
@@ -26,6 +27,8 @@
   --color-on-primary: #ffffff;
   --color-accent: var(--yellow-500);
   --color-danger: var(--red-500);
+  /* Readable on dark surfaces (error messages). */
+  --color-danger-text: var(--red-300);
   --color-success: var(--green-500);
   --color-text: var(--gray-200);
   --color-text-muted: var(--gray-400);

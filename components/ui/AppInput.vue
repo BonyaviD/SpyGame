@@ -70,10 +70,10 @@ defineExpose({ focus: () => input.value?.focus() });
   box-shadow: 0 0 0 1px var(--color-focus);
 }
 .app-input--invalid .app-input__field {
-  border-color: var(--color-danger);
+  border-color: var(--color-danger-text);
 }
 .app-input__error {
   font-size: var(--font-size-sm);
-  color: var(--color-danger);
+  color: var(--color-danger-text);
 }
 </style>
