@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { useGame } from "~/stores/game";
+import { routeForPhase } from "~/utils/routes";
 
 const game = useGame();
 
-const continueRoute = computed(() =>
-  game.phase === "idle" ? null : game.phase === "reveal" ? "/reveal" : "/result",
-);
+const continueRoute = computed(() => (game.phase === "idle" ? null : routeForPhase(game.phase)));
 </script>
 
 <template>

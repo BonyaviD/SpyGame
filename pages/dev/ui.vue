@@ -8,6 +8,7 @@ const colors = [
   "primary",
   "accent",
   "danger",
+  "danger-text",
   "success",
   "text",
   "text-muted",
@@ -22,6 +23,7 @@ const flipped = ref(false);
 const isModalOpen = ref(false);
 const isConfirmOpen = ref(false);
 const lastAction = ref("—");
+const chip = ref(true);
 </script>
 
 <template>
@@ -63,6 +65,10 @@ const lastAction = ref("—");
         <AppInput v-model="name" label="نام بازیکن" placeholder="مثلاً سارا" />
         <AppInput v-model="name" label="با خطا" error="این نام قبلاً ثبت شده است" />
         <AppCounter v-model="count" label="تعداد جاسوس" :min="1" :max="3" />
+        <div class="row">
+          <AppChip :pressed="chip" @click="chip = !chip">Chip فعال/غیرفعال</AppChip>
+          <AppChip :pressed="false" disabled>غیرفعال</AppChip>
+        </div>
       </section>
 
       <section>

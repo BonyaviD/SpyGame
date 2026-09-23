@@ -16,7 +16,12 @@ const currentRule = computed(() => rules.find((rule) => rule.id === activeRule.v
     <AppTabs v-model="activeRule" :tabs="tabs" label="بخش‌های راهنما">
       <article class="rule">
         <h2 class="rule__title">{{ currentRule.title }}</h2>
-        <p class="rule__description">{{ currentRule.description }}</p>
+        <p v-for="paragraph in currentRule.paragraphs" :key="paragraph" class="rule__text">
+          {{ paragraph }}
+        </p>
+        <ol v-if="currentRule.steps" class="rule__steps">
+          <li v-for="step in currentRule.steps" :key="step">{{ step }}</li>
+        </ol>
       </article>
     </AppTabs>
 
@@ -38,9 +43,20 @@ const currentRule = computed(() => rules.find((rule) => rule.id === activeRule.v
   font-size: var(--font-size-2xl);
   font-weight: normal;
 }
-.rule__description {
-  font-size: var(--font-size-lg);
+.rule__text,
+.rule__steps {
+  font-size: var(--font-size-md);
   line-height: var(--line-height-body);
+}
+.rule__steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-inline-start: var(--space-6);
+  list-style: persian;
+}
+.rule__steps li::marker {
+  color: var(--color-accent);
 }
 .guide-credit {
   margin-top: var(--space-4);

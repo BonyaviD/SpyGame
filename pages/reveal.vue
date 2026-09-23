@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { SPY_CARD_TEXT } from "~/data/config";
 import { useGame } from "~/stores/game";
+import { unlockAudio } from "~/utils/alarm";
 import { toFaDigits } from "~/utils/format";
 
 const game = useGame();
 const router = useRouter();
 
+/**
+ * "handoff": asks to pass the phone to the current player, so nobody sees someone else's card.
+ * "card": the current player is holding the phone and can open their card.
+ * Not persisted: after a reload it's safest to start again from the handoff screen.
+ */
+const stage = ref<"handoff" | "card">("handoff");
 const isCardOpen = ref(false);
 /**
  * Text on the open card. Kept separately from the current player so that when the card is
@@ -24,6 +31,7 @@ const onCardClick = () => {
     cardText.value = "";
     isCardOpen.value = false;
     game.markCurrentRevealed();
+    stage.value = "handoff";
   } else {
     cardText.value = game.isSpy(player.id) ? SPY_CARD_TEXT : game.round.word;
     isCardOpen.value = true;
@@ -31,13 +39,15 @@ const onCardClick = () => {
 };
 
 const startDiscussion = async () => {
-  game.finishReveal();
-  await navigateTo("/result");
+  // This click is the user gesture browsers require before the timer alarm can play.
+  unlockAudio();
+  game.startDiscussion();
+  await navigateTo("/discussion");
 };
 
 // Leaving while cards are being dealt cancels the round, so ask first.
-// Moving on to the result or peeking at the guide keeps the round.
-const ROUTES_KEEPING_ROUND = ["/result", "/guide"];
+// Moving on to the discussion or peeking at the guide keeps the round.
+const ROUTES_KEEPING_ROUND = ["/discussion", "/guide"];
 const pendingRoute = ref<string | null>(null);
 const isLeaveConfirmOpen = computed({
   get: () => pendingRoute.value !== null,
@@ -61,21 +71,31 @@ const leaveGame = async () => {
 
 <template>
   <ScreenLayout back="/setup" help>
-    <div v-if="game.currentPlayer" class="reveal">
-      <div class="reveal__heading">
-        <h2 class="reveal__turn">
-          نوبت،
-          <span class="reveal__player">{{ game.currentPlayer.name }}</span>
-        </h2>
-        <p class="reveal__progress">
-          {{ toFaDigits(turnNumber) }} از {{ toFaDigits(totalPlayers) }}
-        </p>
-      </div>
+    <div v-if="game.currentPlayer && stage === 'handoff'" class="reveal reveal--center">
+      <p class="reveal__progress">
+        کارت {{ toFaDigits(turnNumber) }} از {{ toFaDigits(totalPlayers) }}
+      </p>
+      <h2 class="reveal__turn">
+        گوشی را به
+        <span class="reveal__player">{{ game.currentPlayer.name }}</span>
+        بده
+      </h2>
+      <p class="reveal__hint">بقیه نگاه نکنند!</p>
+      <AppButton size="md" @click="stage = 'card'">
+        من {{ game.currentPlayer.name }} هستم
+      </AppButton>
+    </div>
+
+    <div v-else-if="game.currentPlayer" class="reveal">
+      <h2 class="reveal__turn">
+        کارت
+        <span class="reveal__player">{{ game.currentPlayer.name }}</span>
+      </h2>
 
       <FlipCard
         class="reveal__card"
         :flipped="isCardOpen"
-        :label="isCardOpen ? 'بستن کارت و نوبت نفر بعد' : 'دیدن کارت'"
+        :label="isCardOpen ? 'بستن کارت' : 'دیدن کارت'"
         @click="onCardClick"
       >
         <template #front>
@@ -96,18 +116,18 @@ const leaveGame = async () => {
         {{
           isCardOpen
             ? "کلمه را به خاطر بسپار و دوباره روی کارت بزن تا بسته شود."
-            : "فقط خودت کارت را ببین؛ روی کارت بزن."
+            : "روی کارت بزن تا کلمه‌ات را ببینی."
         }}
       </p>
     </div>
 
-    <div v-else class="reveal reveal--done">
+    <div v-else class="reveal reveal--center">
       <h2 class="reveal__turn">همه کارت‌شان را دیدند</h2>
-      <p class="reveal__hint">گوشی را وسط بگذارید و بازی را شروع کنید.</p>
+      <p class="reveal__hint">گوشی را وسط بگذارید و بحث را شروع کنید.</p>
     </div>
 
     <template #footer>
-      <AppButton :disabled="!game.allRevealed" block @click="startDiscussion">شروع بازی</AppButton>
+      <AppButton :disabled="!game.allRevealed" block @click="startDiscussion">شروع بحث</AppButton>
     </template>
 
     <AppConfirm
@@ -129,20 +149,15 @@ const leaveGame = async () => {
   align-items: center;
   gap: var(--space-5);
 }
-.reveal--done {
+.reveal--center {
   justify-content: center;
   height: 100%;
   text-align: center;
 }
-.reveal__heading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-1);
-}
 .reveal__turn {
   font-size: var(--font-size-2xl);
   font-weight: normal;
+  line-height: var(--line-height-body);
 }
 .reveal__player {
   color: var(--color-accent);
