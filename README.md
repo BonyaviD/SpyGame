@@ -51,10 +51,16 @@ assets/css/       tokens.css (توکن‌های طراحی) و base.css (ریس�
 
 بازی قابل نصب روی گوشی است (Add to Home Screen) و بعد از اولین بازدید بدون اینترنت هم کار می‌کند. آیکون اصلی `public/icon.svg` است؛ بعد از تغییرش `npm run generate-icons` را اجرا کنید.
 
+## انتشار
+
+نسخه‌ی آنلاین: **https://spying.netlify.app/**
+
+Netlify با هر push روی `master` سایت را از GitHub می‌سازد (`npm run generate`، خروجی `.output/public`)؛ تنظیمات در `netlify.toml` است. QR code صفحه‌ی دسکتاپ مستقیم به همین آدرس اشاره می‌کند و با `npm run generate-qr` (یا `npm run generate-qr -- <آدرس جدید>`) ساخته می‌شود.
+
 ## تست‌ها و CI
 
 - تست‌های واحد در `tests/stores` و `tests/components` (Vitest با محیط Nuxt).
-- تست‌های E2E در `tests/e2e` روی بیلد production، در سه حالت: موبایل، دسکتاپ و موبایل با انیمیشن‌های واقعی. اولین بار: `npx playwright install chromium`.
+- تست‌های E2E در `tests/e2e` روی همان خروجی استاتیکی که منتشر می‌شود (با `scripts/serve-static.mjs` مثل Netlify سرو می‌شود)، در سه حالت: موبایل، دسکتاپ و موبایل با انیمیشن‌های واقعی؛ به‌علاوه‌ی تست اجرای آفلاین. اولین بار: `npx playwright install chromium`.
 - GitHub Actions (`.github/workflows/ci.yml`) روی هر push و pull request همه‌ی این‌ها را اجرا می‌کند.
 
 ## سیستم دیزاین

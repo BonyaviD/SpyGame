@@ -1,0 +1,19 @@
+# Netlify: builds the static site from GitHub on every push (https://spying.netlify.app/).
+# Nitro's netlify-static preset also writes _redirects and _headers (404 page, asset caching).
+[build]
+  command = "npm run generate"
+  publish = ".output/public"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# The service worker must always be re-checked so updates reach players.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"

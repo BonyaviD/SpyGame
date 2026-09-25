@@ -15,8 +15,9 @@
     "typecheck": "nuxt typecheck",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "nuxt build && playwright test",
-    "generate-icons": "node scripts/generate-icons.mjs"
+    "test:e2e": "nuxt generate && playwright test",
+    "generate-icons": "node scripts/generate-icons.mjs",
+    "generate-qr": "node scripts/generate-qr.mjs"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.5",
@@ -33,6 +34,7 @@
     "eslint-config-prettier": "^9.1.2",
     "happy-dom": "~15.11.7",
     "prettier": "^3.9.8",
+    "qrcode": "^1.5.4",
     "typescript": "~5.6.3",
     "vitest": "~2.1.8",
     "vue-tsc": "^2.1.10"

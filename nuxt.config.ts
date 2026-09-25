@@ -69,6 +69,9 @@ export default defineNuxtConfig({
     workbox: {
       // Cache the whole app so it works without a connection after the first visit.
       globPatterns: ["**/*.{js,css,html,svg,png,ico,woff2}"],
+      // Error pages from `nuxt generate`: hosts may answer them with a 404 status, which makes
+      // the whole precache (and so offline play) fail. The app renders its own error page anyway.
+      globIgnores: ["**/404.html", "**/200.html"],
       navigateFallback: "/",
     },
     client: { installPrompt: false },

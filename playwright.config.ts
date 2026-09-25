@@ -3,8 +3,9 @@ import { defineConfig, devices } from "@playwright/test";
 const PORT = 3100;
 
 /**
- * End-to-end tests against the production build. Run with `npm run test:e2e`
- * (builds first), or `npx playwright test` when `.output` is already built.
+ * End-to-end tests against the static site that gets deployed (`nuxt generate`), served like
+ * Netlify serves it. Run with `npm run test:e2e` (generates first), or `npx playwright test`
+ * when `.output/public` is already generated.
  */
 export default defineConfig({
   testDir: "tests/e2e",
@@ -28,9 +29,10 @@ export default defineConfig({
     { name: "mobile-animated", use: { ...devices["Pixel 7"], reducedMotion: "no-preference" } },
   ],
   webServer: {
-    command: "node .output/server/index.mjs",
+    command: "node scripts/serve-static.mjs",
     port: PORT,
     env: { PORT: String(PORT) },
-    reuseExistingServer: !process.env.CI,
+    // Never reuse: a leftover server from an earlier build would test stale code.
+    reuseExistingServer: false,
   },
 });
